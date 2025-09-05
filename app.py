@@ -2,6 +2,7 @@ from flask import Flask
 import os
 from dotenv import load_dotenv
 from routes.tareas import tareas_bp
+from routes.usuarios import usuarios_bp
 from config.db import init_db, mysql
 
 #cargar variables de entorno
@@ -16,6 +17,8 @@ def create_app():
     
     #registrar el blueprint
     app.register_blueprint(tareas_bp, url_prefix='/tareas')
+    app.register_blueprint(usuarios_bp, url_prefix='/usuarios')
+
     
     return app
 
