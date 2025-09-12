@@ -60,10 +60,10 @@ def put(user_id):
    mensaje = f"usuario con id:{user_id} y nombre: {nombre} {apellido}"
    return jsonify({"saludo":mensaje})
 
-@tareas_bp.route('/actualizar/<int:id_tarea>',methods=['PUT'])
+@tareas_bp.route('/modificar/<int:id_tarea>',methods=['PUT'])
 @jwt_required()
 def modificar(id_tarea):
-   cursor = get_db_connection
+   cursor = get_db_connection()
    current_user = get_jwt_identity()
    
    
@@ -71,15 +71,15 @@ def modificar(id_tarea):
    descripcion =data.get('descripcion')
    
    query = '''
-   SELECET * FROM tareas WHERE id_tarea = %s
+   SELECT id_usuario FROM tareas WHERE id_tarea = %s
    '''
-   cursor.execute(query(id_tarea,))
+   cursor.execute(query,(id_tarea,))
    tarea = cursor.fetchone()
    
    if not tarea:
       return jsonify({"error":"esa tarea no existe"}),404
    
-   if not tarea[1] == int(current_user):
+   if not tarea[0] == int(current_user):
       cursor.close()
       return jsonify({"error":"credenciales incorrectas"}),401
    
